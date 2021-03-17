@@ -1,73 +1,75 @@
-# Wiredcraft Back-end Developer Test
+# tmp
 
-Make sure you read the whole document carefully and follow the guidelines in it.
+This application is generated using [LoopBack 4 CLI](https://loopback.io/doc/en/lb4/Command-line-interface.html) with the
+[initial project layout](https://loopback.io/doc/en/lb4/Loopback-application-layout.html).
 
-## Context
+## Install dependencies
 
-Build a RESTful API that can `get/create/update/delete` user data from a persistence database
+By default, dependencies were installed when this application was generated.
+Whenever dependencies in `package.json` are changed, run the following command:
 
-### User Model
-
-```
-{
-  "id": "xxx",                  // user ID 
-  "name": "test",               // user name
-  "dob": "",                    // date of birth
-  "address": "",                // user address
-  "description": "",            // user description
-  "createdAt": ""               // user created date
-}
+```sh
+npm install
 ```
 
-## Requirements
+To only install resolved dependencies in `package-lock.json`:
 
-### Functionality
+```sh
+npm ci
+```
 
-- The API should follow typical RESTful API design pattern.
-- The data should be saved in the DB.
-- Provide proper unit test.
-- Provide proper API document.
+## Run the application
 
-### Tech stack
+```sh
+npm start
+```
 
-- Use Node.js and any framework.
-- Use any DB. NoSQL DB is preferred.
+You can also run `node .` to skip the build step.
 
-### Bonus
+Open http://127.0.0.1:3000 in your browser.
 
-- Write clear documentation on how it's designed and how to run the code.
-- Write good in-code comments.
-- Write good commit messages.
-- An online demo is always welcome.
+## Rebuild the project
 
-### Advanced requirements
+To incrementally build the project:
 
-*These are used for some further challenges. You can safely skip them if you are not asked to do any, but feel free to try out.*
+```sh
+npm run build
+```
 
-- Provide a complete user auth (authentication/authorization/etc.) strategy, such as OAuth.
-- Provide a complete logging (when/how/etc.) strategy.
-- Imagine we have a new requirement right now that the user instances need to link to each other, i.e., a list of "followers/following" or "friends". Can you find out how you would design the model structure and what API you would build for querying or modifying it?
-- Related to the requirement above, suppose the address of user now includes a geographic coordinate(i.e., latitude and longitude), can you build an API that,
-  - given a user name
-  - return the nearby friends
+To force a full build by cleaning up cached artifacts:
 
+```sh
+npm run rebuild
+```
 
-## What We Care About
+## Fix code style and formatting issues
 
-Feel free to use any open-source library as you see fit, but remember that we are evaluating your coding skills and problem solving skills.
+```sh
+npm run lint
+```
 
-Here's what you should aim for:
+To automatically fix such issues:
 
-- Good use of current Node.js & API design best practices.
-- Good testing approach.
-- Extensible code.
+```sh
+npm run lint:fix
+```
 
-## FAQ
+## Other useful commands
 
-> Where should I send back the result when I'm done?
+- `npm run migrate`: Migrate database schemas for models
+- `npm run openapi-spec`: Generate OpenAPI spec into a file
+- `npm run docker:build`: Build a Docker image for this application
+- `npm run docker:run`: Run this application inside a Docker container
 
-Fork this repo and send us a pull request when you think it's ready for review. You don't have to finish everything prior and you can continue to work on it. We don't have a deadline for the task.
+## Tests
 
-> What if I have a question?
+```sh
+npm test
+```
 
-Create a new issue in the repo and we will get back to you shortly.
+## What's next
+
+Please check out [LoopBack 4 documentation](https://loopback.io/doc/en/lb4/) to
+understand how you can continue to add features to this application.
+
+[![LoopBack](https://github.com/strongloop/loopback-next/raw/master/docs/site/imgs/branding/Powered-by-LoopBack-Badge-(blue)-@2x.png)](http://loopback.io/)
