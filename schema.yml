@@ -1,0 +1,71 @@
+openapi: 3.0.0
+info:
+  title: Wiredcraft Back-end Developer Test
+  description: A RESTful API that can get/create/update/delete user data from a persistence database
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: https://{host}:{port}/api/
+  variables:
+    host:
+      default: localhost
+    port:
+      enum:
+        - 443
+        - 3000
+        - 3443
+      default: 3000
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        dob:
+          type: string
+          format: date
+        address:
+          type: string
+        description:
+          type: string
+        createdAt:
+          type: string
+          format: date
+    Error:
+      type: object
+      properties:
+        message: string
+paths:rm a.l
+  /users/{userId}:
+    get:
+      responses:
+        '200':
+          description: An user with the provided user ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: No user found with the provided user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+    delete:
+  /users:
+    get:
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
