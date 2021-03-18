@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UserController } from './user.controller';
 import { UserRepository } from './domain/user.repository';
 import { OnMemoryUserRepository } from './infra/on-memory/user.repository';
@@ -13,7 +11,7 @@ export const userRepositoryProvider = {
 
 @Module({
   imports: [],
-  controllers: [AppController, UserController],
-  providers: [AppService, UserAppService, userRepositoryProvider],
+  controllers: [UserController],
+  providers: [UserAppService, userRepositoryProvider],
 })
 export class AppModule {}
