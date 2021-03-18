@@ -16,7 +16,7 @@ import {
   UserIdDto,
   UserNotFoundException,
   UserAppService,
-} from './application/user.service';
+} from '../application/user.service';
 
 @Controller('/users')
 export class UserController {

@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
-import { UserAppService } from './application/user.service';
+import { UserAppService } from '../application/user.service';
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { UserRepository } from './domain/user.repository';
-import { OnMemoryUserRepository } from './infra/on-memory/user.repository';
+import { UserRepository } from '../domain/user.repository';
+import { OnMemoryUserRepository } from '../infra/on-memory/user.repository';
 
 describe('UserController', () => {
   let userController: UserController;
