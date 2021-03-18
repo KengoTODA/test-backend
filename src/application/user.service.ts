@@ -53,6 +53,4 @@ export class UserNotFoundException extends Error {
   }
 }
 
-export type UserDto = User;
-export type NewUserDto = NewUser;
-export type UserIdDto = UserId;
+export { User, NewUser, UserId } from '../domain/user.interface';

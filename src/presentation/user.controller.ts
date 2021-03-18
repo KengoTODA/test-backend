@@ -11,13 +11,11 @@ import {
   Put,
 } from '@nestjs/common';
 import {
-  NewUserDto,
-  UserDto,
-  UserIdDto,
+  UserId,
   UserNotFoundException,
   UserAppService,
 } from '../application/user.service';
-
+import { NewUserDto, UserDto } from './user.dto';
 @Controller('/users')
 export class UserController {
   constructor(private readonly UserAppService: UserAppService) {}
@@ -30,7 +28,7 @@ export class UserController {
 
   @Get(':id')
   @Bind(Param('id'))
-  findUser(id: UserIdDto): UserDto {
+  findUser(id: UserId): UserDto {
     const user = this.UserAppService.getUser(id);
     if (user === undefined) {
       throw new HttpException(
@@ -70,7 +68,7 @@ export class UserController {
 
   @Delete(':id')
   @Bind(Param('id'))
-  deleteUser(id: UserIdDto) {
+  deleteUser(id: UserId) {
     const success = this.UserAppService.deleteUser(id);
     if (!success) {
       throw new HttpException(
