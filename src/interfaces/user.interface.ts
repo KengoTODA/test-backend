@@ -1,10 +1,13 @@
 export type UserID = string;
 
-export interface User {
-  id: UserID;
+export interface NewUser {
   name: string;
   dob: Date;
   address: string;
   description: string;
   createdAt: Date;
 }
+
+export type User = NewUser & {
+  id: UserID;
+};
