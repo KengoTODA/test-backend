@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { UserController } from './user.controller';
 import { UserRepository } from './domain/user.repository';
 import { OnMemoryUserRepository } from './infra/on-memory/user.repository';
-import { UserService } from './user.service';
+import { UserAppService } from './application/user.service';
 
 export const userRepositoryProvider = {
   provide: UserRepository,
@@ -14,6 +14,6 @@ export const userRepositoryProvider = {
 @Module({
   imports: [],
   controllers: [AppController, UserController],
-  providers: [AppService, UserService, userRepositoryProvider],
+  providers: [AppService, UserAppService, userRepositoryProvider],
 })
 export class AppModule {}

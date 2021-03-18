@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { NewUser, User, UserID } from './domain/user.interface';
-import { UserRepository } from './domain/user.repository';
+import { NewUser, User, UserId } from '../domain/user.interface';
+import { UserRepository } from '../domain/user.repository';
 
 @Injectable()
-export class UserService {
+export class UserAppService {
   constructor(private readonly userRepository: UserRepository) {}
 
   listUser(): IterableIterator<User> {
@@ -11,15 +11,15 @@ export class UserService {
   }
 
   /**
-   * @param id UserID of the target user
-   * @returns the user data found by the given UserID
+   * @param id UserId of the target user
+   * @returns the user data found by the given UserId
    */
-  getUser(id: UserID): User | undefined {
+  getUser(id: UserId): User | undefined {
     return this.userRepository.load(id);
   }
 
   createUser(newUser: NewUser): User {
-    const id = this.createUserID();
+    const id = this.createUserId();
     const createdUser = { ...newUser, id };
     this.userRepository.store(createdUser);
     return createdUser;
@@ -34,14 +34,14 @@ export class UserService {
   }
 
   /**
-   * @param id UserID of the target user
+   * @param id UserId of the target user
    * @returns true if user is found and deleted
    */
-  deleteUser(id: UserID): boolean {
+  deleteUser(id: UserId): boolean {
     return this.userRepository.delete(id);
   }
 
-  private createUserID(): string {
+  private createUserId(): string {
     // TODO generate user id randomly
     return 'a';
   }
@@ -52,3 +52,7 @@ export class UserNotFoundException extends Error {
     super(`No user found with user ID ${id}`);
   }
 }
+
+export type UserDto = User;
+export type NewUserDto = NewUser;
+export type UserIdDto = UserId;

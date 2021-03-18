@@ -10,23 +10,28 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { UserNotFoundException, UserService } from './user.service';
-import { NewUser, User, UserID } from './domain/user.interface';
+import {
+  NewUserDto,
+  UserDto,
+  UserIdDto,
+  UserNotFoundException,
+  UserAppService,
+} from './application/user.service';
 
 @Controller('/users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly UserAppService: UserAppService) {}
 
   @Get()
-  listUser(): User[] {
+  listUser(): UserDto[] {
     // TODO handle as stream
-    return Array.from(this.userService.listUser());
+    return Array.from(this.UserAppService.listUser());
   }
 
   @Get(':id')
   @Bind(Param('id'))
-  findUser(id: UserID): User {
-    const user = this.userService.getUser(id);
+  findUser(id: UserIdDto): UserDto {
+    const user = this.UserAppService.getUser(id);
     if (user === undefined) {
       throw new HttpException(
         `No user found with user ID ${id}`,
@@ -39,17 +44,17 @@ export class UserController {
 
   @Post()
   @Bind(Body())
-  createUser(user: NewUser): User {
-    const createdUser = this.userService.createUser(user);
+  createUser(user: NewUserDto): UserDto {
+    const createdUser = this.UserAppService.createUser(user);
     return createdUser;
   }
 
   @Put(':id')
   @Bind(Param('id'), Body())
-  updateUser(id: string, user: NewUser): User {
+  updateUser(id: string, user: NewUserDto): UserDto {
     try {
       const updated = { ...user, id };
-      this.userService.updateUser(updated);
+      this.UserAppService.updateUser(updated);
       return updated;
     } catch (e) {
       if (e instanceof UserNotFoundException) {
@@ -65,8 +70,8 @@ export class UserController {
 
   @Delete(':id')
   @Bind(Param('id'))
-  deleteUser(id: UserID) {
-    const success = this.userService.deleteUser(id);
+  deleteUser(id: UserIdDto) {
+    const success = this.UserAppService.deleteUser(id);
     if (!success) {
       throw new HttpException(
         `No user found with user ID ${id}`,

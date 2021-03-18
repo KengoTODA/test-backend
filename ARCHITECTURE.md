@@ -25,7 +25,7 @@ digraph G {
 
 This tier represents the domain of target business. In this layer, we put the following codes:
 
-- Value object (VO) like UserID
+- Value object (VO) like UserId
 - Entity like User
 - Domain Service
 - Specification, and

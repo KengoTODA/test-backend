@@ -1,4 +1,4 @@
-export type UserID = string;
+export type UserId = string;
 
 export interface NewUser {
   name: string;
@@ -9,5 +9,5 @@ export interface NewUser {
 }
 
 export type User = NewUser & {
-  id: UserID;
+  id: UserId;
 };
