@@ -1,7 +1,9 @@
-import { User, UserID } from './interfaces/user.interface';
+import { User, UserID } from '../../domain/user.interface';
+import { UserRepository } from '../../domain/user.repository';
 
-export class UserRepository {
+export class OnMemoryUserRepository extends UserRepository {
   constructor(private readonly map: Map<UserID, User>) {
+    super();
     this.map = new Map<UserID, User>();
   }
 

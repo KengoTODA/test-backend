@@ -11,7 +11,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { UserNotFoundException, UserService } from './user.service';
-import { NewUser, User, UserID } from './interfaces/user.interface';
+import { NewUser, User, UserID } from './domain/user.interface';
 
 @Controller('/users')
 export class UserController {
