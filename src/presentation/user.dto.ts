@@ -8,22 +8,26 @@
 import { UserId } from 'src/domain/user.interface';
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class NewUserDto {
+export class UserDto {
+  @IsNotEmpty()
+  @IsString()
+  id: UserId;
+
   @IsNotEmpty()
   @IsString()
   name: string;
+
   @IsString()
   dob: Date;
+
   @IsString()
   address: string;
+
   @IsString()
   description: string;
+
   @IsString()
   createdAt: Date;
 }
 
-export class UserDto extends NewUserDto {
-  @IsNotEmpty()
-  @IsString()
-  id: UserId;
-}
+export type NewUserDto = Omit<UserDto, 'id'>;
