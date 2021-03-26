@@ -1,8 +1,9 @@
 import { User, UserId } from './user.interface';
 
 export abstract class UserRepository {
-  abstract list(): IterableIterator<User>;
-  abstract store(user: User): void;
-  abstract load(id: UserId): User | undefined;
-  abstract delete(id: UserId): boolean;
+  abstract list(): Promise<IterableIterator<User>>;
+  abstract create(user: User): Promise<void>;
+  abstract update(user: User): Promise<void>;
+  abstract load(id: UserId): Promise<User | undefined>;
+  abstract delete(id: UserId): Promise<boolean>;
 }

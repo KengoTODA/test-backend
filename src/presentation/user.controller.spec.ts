@@ -24,13 +24,13 @@ describe('UserController', () => {
   });
 
   describe('root', () => {
-    it('should return empty list', () => {
-      const list = Array.from(userController.listUser());
+    it('should return empty list', async () => {
+      const list = Array.from(await userController.listUser());
       expect(list.length).toBe(0);
     });
 
-    it('should return a list after we create a user', () => {
-      const created = userController.createUser({
+    it('should return a list after we create a user', async () => {
+      const created = await userController.createUser({
         name: 'Name',
         dob: new Date(),
         address: '',
@@ -38,30 +38,30 @@ describe('UserController', () => {
         createdAt: new Date(),
       });
 
-      const list = Array.from(userController.listUser());
+      const list = await userController.listUser();
       expect(list.length).toBe(1);
       expect(list[0]).toEqual(created);
     });
   });
 
   describe('/:id', () => {
-    it('should return 404 by default', () => {
-      expect(() => userController.findUser('foo')).toThrow(
+    it('should return 404 by default', async () => {
+      await expect(() => userController.findUser('foo')).rejects.toThrow(
         new HttpException(
           'No user found with user ID foo',
           HttpStatus.NOT_FOUND,
         ),
       );
     });
-    it('should return a user after we create a user', () => {
-      const created = userController.createUser({
+    it('should return a user after we create a user', async () => {
+      const created = await userController.createUser({
         name: 'Name',
         dob: new Date(),
         address: '',
         description: '',
         createdAt: new Date(),
       });
-      const found = userController.findUser(created.id);
+      const found = await userController.findUser(created.id);
       expect(found).toEqual(created);
     });
   });

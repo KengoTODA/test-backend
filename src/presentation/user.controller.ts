@@ -30,9 +30,9 @@ export class UserController {
     status: 200,
     description: 'The record has been successfully listed.',
   })
-  listUser(): UserWithIdDto[] {
+  async listUser(): Promise<UserWithIdDto[]> {
     // TODO handle as stream
-    return Array.from(this.UserAppService.listUser());
+    return Array.from(await this.UserAppService.listUser());
   }
 
   @Get(':id')
@@ -45,8 +45,8 @@ export class UserController {
     description: 'The record has been successfully found.',
   })
   @ApiResponse({ status: 404, description: 'The record has not been found.' })
-  findUser(id: UserId): UserWithIdDto {
-    const user = this.UserAppService.getUser(id);
+  async findUser(id: UserId): Promise<UserWithIdDto> {
+    const user = await this.UserAppService.getUser(id);
     if (user === undefined) {
       throw new HttpException(
         `No user found with user ID ${id}`,
@@ -66,9 +66,8 @@ export class UserController {
     status: 201,
     description: 'The record has been successfully created.',
   })
-  createUser(user: UserDto): UserWithIdDto {
-    const createdUser = this.UserAppService.createUser(user);
-    return createdUser;
+  createUser(user: UserDto): Promise<UserWithIdDto> {
+    return this.UserAppService.createUser(user);
   }
 
   @Put(':id')
@@ -81,10 +80,10 @@ export class UserController {
     description: 'The record has been successfully updated.',
   })
   @ApiResponse({ status: 404, description: 'The record has not been found.' })
-  updateUser(id: string, user: UserDto): UserWithIdDto {
+  async updateUser(id: string, user: UserDto): Promise<UserWithIdDto> {
     try {
       const updated = { ...user, id };
-      this.UserAppService.updateUser(updated);
+      await this.UserAppService.updateUser(updated);
       return updated;
     } catch (e) {
       if (e instanceof UserNotFoundException) {
@@ -108,8 +107,8 @@ export class UserController {
     description: 'The record has been successfully deleted.',
   })
   @ApiResponse({ status: 404, description: 'The record has not been found.' })
-  deleteUser(id: UserId) {
-    const success = this.UserAppService.deleteUser(id);
+  async deleteUser(id: UserId) {
+    const success = await this.UserAppService.deleteUser(id);
     if (!success) {
       throw new HttpException(
         `No user found with user ID ${id}`,

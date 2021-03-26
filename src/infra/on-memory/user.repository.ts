@@ -7,19 +7,25 @@ export class OnMemoryUserRepository extends UserRepository {
     this.map = new Map<UserId, User>();
   }
 
-  list(): IterableIterator<User> {
-    return this.map.values();
+  list(): Promise<IterableIterator<User>> {
+    return Promise.resolve(this.map.values());
   }
 
-  store(user: User) {
+  create(user: User) {
     this.map.set(user.id, user);
+    return Promise.resolve(void 0);
   }
 
-  load(id: UserId): User | undefined {
-    return this.map.get(id);
+  update(user: User) {
+    this.map.set(user.id, user);
+    return Promise.resolve(void 0);
   }
 
-  delete(id: UserId): boolean {
-    return this.map.delete(id);
+  load(id: UserId): Promise<User | undefined> {
+    return Promise.resolve(this.map.get(id));
+  }
+
+  delete(id: UserId): Promise<boolean> {
+    return Promise.resolve(this.map.delete(id));
   }
 }

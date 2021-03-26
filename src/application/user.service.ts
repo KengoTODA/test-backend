@@ -6,7 +6,7 @@ import { UserRepository } from '../domain/user.repository';
 export class UserAppService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  listUser(): IterableIterator<User> {
+  async listUser(): Promise<IterableIterator<User>> {
     return this.userRepository.list();
   }
 
@@ -14,30 +14,30 @@ export class UserAppService {
    * @param id UserId of the target user
    * @returns the user data found by the given UserId
    */
-  getUser(id: UserId): User | undefined {
+  getUser(id: UserId): Promise<User | undefined> {
     return this.userRepository.load(id);
   }
 
-  createUser(newUser: NewUser): User {
+  async createUser(newUser: NewUser): Promise<User> {
     const id = this.createUserId();
     const createdUser = { ...newUser, id };
-    this.userRepository.store(createdUser);
+    await this.userRepository.create(createdUser);
     return createdUser;
   }
 
-  updateUser(user: User) {
-    const old = this.userRepository.load(user.id);
+  async updateUser(user: User) {
+    const old = await this.userRepository.load(user.id);
     if (!old) {
       throw new UserNotFoundException(user.id);
     }
-    this.userRepository.store(user);
+    return this.userRepository.update(user);
   }
 
   /**
    * @param id UserId of the target user
    * @returns true if user is found and deleted
    */
-  deleteUser(id: UserId): boolean {
+  deleteUser(id: UserId): Promise<boolean> {
     return this.userRepository.delete(id);
   }
 
