@@ -1,5 +1,12 @@
-
 ## Developers' Note
+
+### Run MongoDB in container
+
+```sh
+docker pull mongo:4.4
+docker run -it -p 8081:8081 mongo:4.4
+```
+
 ### Enable HTTPS in local
 
 To [use HTTPS in local](https://web.dev/how-to-use-local-https/), make sure you've created `localhost.pem` and `localhost-key.pem` in the project root directory:
