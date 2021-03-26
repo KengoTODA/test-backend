@@ -7,16 +7,39 @@ We split the project into four tiers: domain, infrastructure, application, and p
 ![dependency of tiers](./tiers.png)
 
 <!--
-```graphiz
+```graphviz
 # https://sketchviz.com/new
 digraph G {
+    compound=true;
     node [fontname = "Handlee"];
     edge [fontname = "Handlee"];
 
-    infrastructure -> domain
-    application -> domain
-    application -> infrastructure
-    presentation -> application
+    subgraph cluster_domain {
+        label = "Domain"
+        color = gray
+        "Repository (interface)" -> Entity -> ValueObject
+        "Repository (interface)" -> ValueObject
+        { rank = same; Entity; ValueObject; }
+    }
+    subgraph cluster_infrastructure {
+        label = "Infrastructure"
+        color = gray
+        "Repository (implementation)" -> "Repository (interface)" [label="implements"]
+        "Repository (implementation)" -> "Repository (interface)" [lhead=cluster_domain];
+    }
+    subgraph cluster_application {
+        label = "Application"
+        color = gray
+        ApplicationService -> "Repository (interface)" [lhead=cluster_domain];
+        ApplicationService -> "Repository (implementation)" [label ="useClass", style="dashed"]
+    }
+    subgraph cluster_presentation {
+        label = "Presentation"
+        color = gray
+        Controller -> DTO
+        Controller -> ApplicationService
+        { rank = same; Controller; DTO; }
+    }
 }
 ```
 -->
@@ -39,12 +62,12 @@ Ideally, this tier can be replaced with similar implementation that supports ano
 
 ### Application
 
-This tier represents use cases of each domain. In this layer, we put Application Service, and DTO published to the Presentation layer.
+This tier represents use cases of each domain. Use cases are grouped per target domain and named ApplicationService.
 
 All required operations are able to handle in this tier.
 
 ### Presentation
 
-This tier provides RESTful interface to handle feature in the application tier. Note that this tier should not refer API in domain and infrastructure tier: only DTO and application services are visible to this tier.
+This tier provides RESTful interface to handle feature in the application tier. Note that this tier should not refer API in domain and infrastructure tier: only application services are visible to this tier.
 
 This presentation tier also provides [OpenAPI definition and documentation](https://docs.nestjs.com/openapi).
