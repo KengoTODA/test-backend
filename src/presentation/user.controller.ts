@@ -16,13 +16,16 @@ import {
   UserAppService,
 } from '../application/user.service';
 import { UserDto, UserWithIdDto } from './user.dto';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 @ApiTags('users')
 @Controller('/users')
 export class UserController {
   constructor(private readonly UserAppService: UserAppService) {}
 
   @Get()
+  @ApiOperation({
+    summary: 'List all users registered to the system',
+  })
   @ApiResponse({
     status: 200,
     description: 'The record has been successfully listed.',
@@ -34,6 +37,9 @@ export class UserController {
 
   @Get(':id')
   @Bind(Param('id'))
+  @ApiOperation({
+    summary: 'Get a user with the specified UserID',
+  })
   @ApiResponse({
     status: 200,
     description: 'The record has been successfully found.',
@@ -53,6 +59,9 @@ export class UserController {
 
   @Post()
   @Bind(Body())
+  @ApiOperation({
+    summary: 'Create a user with specified properties',
+  })
   @ApiResponse({
     status: 201,
     description: 'The record has been successfully created.',
@@ -64,6 +73,9 @@ export class UserController {
 
   @Put(':id')
   @Bind(Param('id'), Body())
+  @ApiOperation({
+    summary: 'Update the user with the specified properties',
+  })
   @ApiResponse({
     status: 200,
     description: 'The record has been successfully updated.',
@@ -88,6 +100,9 @@ export class UserController {
 
   @Delete(':id')
   @Bind(Param('id'))
+  @ApiOperation({
+    summary: 'Delete the user with the specified UserID',
+  })
   @ApiResponse({
     status: 200,
     description: 'The record has been successfully deleted.',
