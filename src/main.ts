@@ -30,7 +30,7 @@ async function bootstrap() {
       'a RESTful API that can get/create/update/delete user data from a persistence database',
     )
     .setVersion('1.0')
-    .addTag('wiredcraft')
+    .addTag('users')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
