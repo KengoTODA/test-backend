@@ -4,21 +4,18 @@ import {
   Controller,
   Delete,
   Get,
-  HttpException,
-  HttpStatus,
   Param,
   Post,
   Put,
+  UseFilters,
 } from '@nestjs/common';
-import {
-  UserId,
-  UserNotFoundException,
-  UserAppService,
-} from '../application/user.service';
+import { UserId, UserAppService } from '../application/user.service';
 import { UserDto, UserWithIdDto } from './user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { UserNotFoundExceptionFilter } from './user.filter';
 @ApiTags('users')
 @Controller('/users')
+@UseFilters(new UserNotFoundExceptionFilter())
 export class UserController {
   constructor(private readonly UserAppService: UserAppService) {}
 
@@ -46,15 +43,7 @@ export class UserController {
   })
   @ApiResponse({ status: 404, description: 'The record has not been found.' })
   async findUser(id: UserId): Promise<UserWithIdDto> {
-    const user = await this.UserAppService.getUser(id);
-    if (!user) {
-      throw new HttpException(
-        `No user found with user ID ${id}`,
-        HttpStatus.NOT_FOUND,
-      );
-    } else {
-      return user;
-    }
+    return await this.UserAppService.getUser(id);
   }
 
   @Post()
@@ -81,20 +70,9 @@ export class UserController {
   })
   @ApiResponse({ status: 404, description: 'The record has not been found.' })
   async updateUser(id: string, user: UserDto): Promise<UserWithIdDto> {
-    try {
-      const updated = { ...user, id };
-      await this.UserAppService.updateUser(updated);
-      return updated;
-    } catch (e) {
-      if (e instanceof UserNotFoundException) {
-        throw new HttpException(
-          `No user found with user ID ${id}`,
-          HttpStatus.NOT_FOUND,
-        );
-      } else {
-        throw e;
-      }
-    }
+    const updated = { ...user, id };
+    await this.UserAppService.updateUser(updated);
+    return updated;
   }
 
   @Delete(':id')
@@ -108,17 +86,6 @@ export class UserController {
   })
   @ApiResponse({ status: 404, description: 'The record has not been found.' })
   async deleteUser(id: UserId) {
-    try {
-      await this.UserAppService.deleteUser(id);
-    } catch (e) {
-      if (e instanceof UserNotFoundException) {
-        throw new HttpException(
-          `No user found with user ID ${id}`,
-          HttpStatus.NOT_FOUND,
-        );
-      } else {
-        throw e;
-      }
-    }
+    await this.UserAppService.deleteUser(id);
   }
 }

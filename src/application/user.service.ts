@@ -19,8 +19,12 @@ export class UserAppService {
    * @param id UserId of the target user
    * @returns the user data found by the given UserId
    */
-  getUser(id: UserId): Promise<User> {
-    return this.userRepository.load(id);
+  async getUser(id: UserId): Promise<User> {
+    const found = await this.userRepository.load(id);
+    if (!found) {
+      throw new UserNotFoundException(id);
+    }
+    return found;
   }
 
   async createUser(newUser: NewUser): Promise<User> {
