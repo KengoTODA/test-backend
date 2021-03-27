@@ -1,10 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import {
-  NewUser,
-  User,
-  UserId,
-  UserNotFoundException,
-} from '../domain/user.interface';
+import { NewUser, User, UserId } from '../domain/user.interface';
 import { UserRepository } from '../domain/user.repository';
 
 @Injectable()
@@ -20,11 +15,7 @@ export class UserAppService {
    * @returns the user data found by the given UserId
    */
   async getUser(id: UserId): Promise<User> {
-    const found = await this.userRepository.load(id);
-    if (!found) {
-      throw new UserNotFoundException(id);
-    }
-    return found;
+    return this.userRepository.load(id);
   }
 
   async createUser(newUser: NewUser): Promise<User> {
@@ -33,10 +24,6 @@ export class UserAppService {
   }
 
   async updateUser(user: User) {
-    const old = await this.userRepository.load(user.id);
-    if (!old) {
-      throw new UserNotFoundException(user.id);
-    }
     return this.userRepository.update(user);
   }
 

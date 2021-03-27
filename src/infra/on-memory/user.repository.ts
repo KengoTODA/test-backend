@@ -1,4 +1,9 @@
-import { NewUser, User, UserId } from '../../domain/user.interface';
+import {
+  NewUser,
+  User,
+  UserId,
+  UserNotFoundException,
+} from '../../domain/user.interface';
 import { UserRepository } from '../../domain/user.repository';
 
 export class OnMemoryUserRepository extends UserRepository {
@@ -23,15 +28,24 @@ export class OnMemoryUserRepository extends UserRepository {
   }
 
   update(user: User) {
+    if (!this.map.has(user.id)) {
+      return Promise.reject(new UserNotFoundException(user.id));
+    }
     this.map.set(user.id, user);
     return Promise.resolve(void 0);
   }
 
   load(id: UserId): Promise<User | undefined> {
+    if (!this.map.has(id)) {
+      return Promise.reject(new UserNotFoundException(id));
+    }
     return Promise.resolve(this.map.get(id));
   }
 
   delete(id: UserId): Promise<void> {
+    if (!this.map.has(id)) {
+      return Promise.reject(new UserNotFoundException(id));
+    }
     this.map.delete(id);
     return Promise.resolve(void 0);
   }

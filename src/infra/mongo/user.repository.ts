@@ -72,10 +72,14 @@ export class MongoUserRepository extends UserRepository {
 
   async load(id: UserId): Promise<User | undefined> {
     if (!isValidObjectId(id)) {
-      return Promise.resolve(undefined);
+      return Promise.reject(new UserNotFoundException(id));
     }
     const found = await this.userModel.findById(id).exec();
-    return mapToEntity(found);
+    if (found) {
+      return mapToEntity(found);
+    } else {
+      return Promise.reject(new UserNotFoundException(id));
+    }
   }
 
   delete(id: UserId): Promise<void> {
@@ -87,7 +91,7 @@ export class MongoUserRepository extends UserRepository {
         .findByIdAndDelete(id)
         .exec()
         .then((result) => {
-          if (!!result) {
+          if (!result) {
             reject(new UserNotFoundException(id));
           }
           resolve(void 0);
