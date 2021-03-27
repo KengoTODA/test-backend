@@ -44,7 +44,7 @@ export class UserAppService {
    * @returns the user data found by the given UserId
    */
   async getUser(id: UserId): Promise<User> {
-    return this.userRepository.load(id);
+    return this.userRepository.find(id);
   }
 
   async createUser(newUser: NewUser): Promise<User> {

@@ -66,7 +66,7 @@ export class MongoUserRepository extends UserRepository {
     });
   }
 
-  async load(id: UserId): Promise<User> {
+  async find(id: UserId): Promise<User> {
     if (!isValidObjectId(id)) {
       return Promise.reject(new UserNotFoundException(id));
     }
