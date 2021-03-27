@@ -1,9 +1,5 @@
-import {
-  NewUser,
-  UserNotFoundException,
-  User,
-  UserId,
-} from '../../domain/user.interface';
+import { NewUser, User, UserId } from '../../domain/user.interface';
+import { UserNotFoundException } from '../../domain/user.exception';
 import { UserRepository } from '../../domain/user.repository';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserInMongo, UserDocument } from './user.schema';

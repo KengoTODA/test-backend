@@ -11,9 +11,3 @@ export interface NewUser {
 export type User = NewUser & {
   id: UserId;
 };
-
-export class UserNotFoundException extends Error {
-  constructor(id: string) {
-    super(`No user found with user ID ${id}`);
-  }
-}

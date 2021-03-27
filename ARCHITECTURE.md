@@ -19,7 +19,8 @@ digraph G {
         color = gray
         "Repository (interface)" -> Entity -> ValueObject
         "Repository (interface)" -> ValueObject
-        { rank = same; Entity; ValueObject; }
+        "Repository (interface)" -> Exception
+        { rank = same; Entity; ValueObject; Exception; }
     }
     subgraph cluster_infrastructure {
         label = "Infrastructure"
@@ -51,7 +52,7 @@ This tier represents the domain of target business. In this layer, we put the fo
 - Value object (VO) like UserId
 - Entity like User
 - Domain Service
-- Specification, and
+- Exception, and
 - Repository interface
 
 ### Infrastructure
