@@ -32,6 +32,15 @@ describe('OnMemory infra tier', () => {
     });
   });
 
+  describe('load()', () => {
+    it('throws an error if UserId is invalid', async () => {
+      expect(repo.load('unknown')).rejects.toThrow(UserNotFoundException);
+    });
+    it('throws an error if user not found', async () => {
+      expect(repo.load('12characters')).rejects.toThrow(UserNotFoundException);
+    });
+  });
+
   describe('update()', () => {
     it('throws an error if user not found', async () => {
       async function tryUpdate() {
@@ -65,8 +74,13 @@ describe('OnMemory infra tier', () => {
   });
 
   describe('delete()', () => {
-    it('throws an error if user not found', async () => {
+    it('throws an error if UserId is invalid', async () => {
       expect(repo.delete('unknown')).rejects.toThrow(UserNotFoundException);
+    });
+    it('throws an error if user not found', async () => {
+      expect(repo.delete('12characters')).rejects.toThrow(
+        UserNotFoundException,
+      );
     });
     it('delete a user', async () => {
       const created = await repo.create({

@@ -87,7 +87,7 @@ export class MongoUserRepository extends UserRepository {
         .deleteOne({ _id: id })
         .exec()
         .then((result) => {
-          if (!result) {
+          if (result.ok && result.deletedCount !== 1) {
             reject(new UserNotFoundException(id));
           }
           resolve(void 0);
