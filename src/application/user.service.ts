@@ -14,14 +14,12 @@ export class UserAppService {
    * @param id UserId of the target user
    * @returns the user data found by the given UserId
    */
-  getUser(id: UserId): Promise<User | undefined> {
+  getUser(id: UserId): Promise<User> {
     return this.userRepository.load(id);
   }
 
   async createUser(newUser: NewUser): Promise<User> {
-    const id = this.createUserId();
-    const createdUser = { ...newUser, id };
-    await this.userRepository.create(createdUser);
+    const createdUser = await this.userRepository.create(newUser);
     return createdUser;
   }
 
@@ -39,11 +37,6 @@ export class UserAppService {
    */
   deleteUser(id: UserId): Promise<boolean> {
     return this.userRepository.delete(id);
-  }
-
-  private createUserId(): string {
-    // TODO generate user id randomly
-    return 'a';
   }
 }
 

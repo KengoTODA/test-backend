@@ -47,7 +47,7 @@ export class UserController {
   @ApiResponse({ status: 404, description: 'The record has not been found.' })
   async findUser(id: UserId): Promise<UserWithIdDto> {
     const user = await this.UserAppService.getUser(id);
-    if (user === undefined) {
+    if (!user) {
       throw new HttpException(
         `No user found with user ID ${id}`,
         HttpStatus.NOT_FOUND,

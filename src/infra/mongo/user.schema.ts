@@ -1,11 +1,8 @@
-import { UserId } from '../../domain/user.interface';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 @Schema()
 export class UserInMongo {
-  @Prop()
-  id: UserId;
   @Prop()
   name: string;
   @Prop()

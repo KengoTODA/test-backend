@@ -21,6 +21,8 @@ describe('UserController', () => {
     }).compile();
 
     userController = app.get<UserController>(UserController);
+    const repository = app.get<UserRepository>(UserRepository);
+    repository.deleteAll();
   });
 
   describe('root', () => {
