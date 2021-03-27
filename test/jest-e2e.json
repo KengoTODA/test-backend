@@ -8,5 +8,9 @@
   },
   "coverageDirectory": "coverage-e2e",
   "collectCoverageFrom": ["src/**"],
-  "coveragePathIgnorePatterns": [".module.ts$"]
+  "coveragePathIgnorePatterns": [
+    ".module.ts$",
+    ".spec.ts$",
+    "src/infra/on-memory"
+  ]
 }
