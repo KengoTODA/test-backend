@@ -3,6 +3,7 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { existsSync, readFileSync } from 'fs';
+import * as helmet from 'helmet';
 
 const CERT_FILE = 'localhost.pem';
 const KEY_FILE = 'localhost-key.pem';
@@ -23,6 +24,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     httpsOptions,
   });
+  app.use(helmet());
 
   const config = new DocumentBuilder()
     .setTitle('Wiredcraft Back-end Developer Test')
