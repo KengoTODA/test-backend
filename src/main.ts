@@ -45,6 +45,7 @@ async function bootstrap() {
     .addTag('users')
     .addOAuth2()
     .build();
+  // TODO "try it out" in API page does not work due to CORS
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
 
