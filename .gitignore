@@ -1,5 +1,6 @@
 localhost.pem
 localhost-key.pem
+.env
 
 # compiled output
 /dist

@@ -2,6 +2,17 @@
 
 ## Developers' Note
 
+### Configure environment variable
+
+To [configure passport-github](https://github.com/jaredhanson/passport-github/tree/46b96e8ad4af7a3f30532316ab2ce6cc36316ed2#configure-strategy), we need to set `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` environment variable.
+It is also necessary to configure `GITHUB_REDIRECT_URL` if your server is not running at `https://localhost:3000/` (e.g. in production)).
+
+```
+GITHUB_CLIENT_ID=...
+GITHUB_CLIENT_SECRET=...
+GITHUB_REDIRECT_URL=https://example.com:3000/accounts/login/callback
+```
+
 ### Run MongoDB in container
 
 ```sh

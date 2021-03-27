@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import * as passport from 'passport';
 import { AppModule } from './app.module';
 import { existsSync, readFileSync } from 'fs';
 import * as helmet from 'helmet';
@@ -24,7 +25,16 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     httpsOptions,
   });
-  app.use(helmet());
+  app.use(
+    helmet.contentSecurityPolicy({
+      directives: {
+        defaultSrc: ["'self'"],
+        connectSrc: ["'self'", 'https://github.com/'],
+        imgSrc: ["'self'", 'data:'],
+        styleSrc: ["'self'", 'unsafe-inline'],
+      },
+    }),
+  );
 
   const config = new DocumentBuilder()
     .setTitle('Wiredcraft Back-end Developer Test')
@@ -33,11 +43,14 @@ async function bootstrap() {
     )
     .setVersion('1.0')
     .addTag('users')
+    .addOAuth2()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
 
   app.useGlobalPipes(new ValidationPipe());
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   await app.listen(3000);
 }

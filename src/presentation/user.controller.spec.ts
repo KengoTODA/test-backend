@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
-import { UserAppService } from '../application/user.service';
+import { UserDomainService, UserAppService } from '../application/user.service';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { UserRepository } from '../domain/user.repository';
 import { OnMemoryUserRepository } from '../infra/on-memory/user.repository';
@@ -12,6 +12,7 @@ describe('UserController', () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
       providers: [
+        UserDomainService,
         UserAppService,
         {
           provide: UserRepository,

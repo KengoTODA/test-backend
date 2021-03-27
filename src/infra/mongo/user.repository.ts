@@ -66,7 +66,7 @@ export class MongoUserRepository extends UserRepository {
     });
   }
 
-  async load(id: UserId): Promise<User | undefined> {
+  async load(id: UserId): Promise<User> {
     if (!isValidObjectId(id)) {
       return Promise.reject(new UserNotFoundException(id));
     }
@@ -75,6 +75,15 @@ export class MongoUserRepository extends UserRepository {
       return mapToEntity(found);
     } else {
       return Promise.reject(new UserNotFoundException(id));
+    }
+  }
+
+  async findByName(name: string): Promise<User> {
+    const found = await this.userModel.findOne({ name }).exec();
+    if (found) {
+      return mapToEntity(found);
+    } else {
+      return Promise.reject(new UserNotFoundException());
     }
   }
 
