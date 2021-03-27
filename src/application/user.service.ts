@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { NewUser, User, UserId } from '../domain/user.interface';
+import {
+  NewUser,
+  User,
+  UserId,
+  UserNotFoundException,
+} from '../domain/user.interface';
 import { UserRepository } from '../domain/user.repository';
 
 @Injectable()
@@ -35,15 +40,14 @@ export class UserAppService {
    * @param id UserId of the target user
    * @returns true if user is found and deleted
    */
-  deleteUser(id: UserId): Promise<boolean> {
+  deleteUser(id: UserId): Promise<void> {
     return this.userRepository.delete(id);
   }
 }
 
-export class UserNotFoundException extends Error {
-  constructor(id: string) {
-    super(`No user found with user ID ${id}`);
-  }
-}
-
-export { User, NewUser, UserId } from '../domain/user.interface';
+export {
+  User,
+  NewUser,
+  UserId,
+  UserNotFoundException,
+} from '../domain/user.interface';

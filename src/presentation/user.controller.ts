@@ -108,12 +108,17 @@ export class UserController {
   })
   @ApiResponse({ status: 404, description: 'The record has not been found.' })
   async deleteUser(id: UserId) {
-    const success = await this.UserAppService.deleteUser(id);
-    if (!success) {
-      throw new HttpException(
-        `No user found with user ID ${id}`,
-        HttpStatus.NOT_FOUND,
-      );
+    try {
+      await this.UserAppService.deleteUser(id);
+    } catch (e) {
+      if (e instanceof UserNotFoundException) {
+        throw new HttpException(
+          `No user found with user ID ${id}`,
+          HttpStatus.NOT_FOUND,
+        );
+      } else {
+        throw e;
+      }
     }
   }
 }

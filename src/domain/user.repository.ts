@@ -5,7 +5,7 @@ export abstract class UserRepository {
   abstract create(user: NewUser): Promise<User>;
   abstract update(user: User): Promise<void>;
   abstract load(id: UserId): Promise<User | undefined>;
-  abstract delete(id: UserId): Promise<boolean>;
+  abstract delete(id: UserId): Promise<void>;
   /**
    * Delete all users in repository. This method is provided for unit test.
    */

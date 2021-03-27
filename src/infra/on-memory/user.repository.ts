@@ -31,8 +31,9 @@ export class OnMemoryUserRepository extends UserRepository {
     return Promise.resolve(this.map.get(id));
   }
 
-  delete(id: UserId): Promise<boolean> {
-    return Promise.resolve(this.map.delete(id));
+  delete(id: UserId): Promise<void> {
+    this.map.delete(id);
+    return Promise.resolve(void 0);
   }
 
   deleteAll(): Promise<void> {

@@ -1,4 +1,9 @@
-import { NewUser, User, UserId } from '../../domain/user.interface';
+import {
+  NewUser,
+  UserNotFoundException,
+  User,
+  UserId,
+} from '../../domain/user.interface';
 import { UserRepository } from '../../domain/user.repository';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserInMongo, UserDocument } from './user.schema';
@@ -53,7 +58,7 @@ export class MongoUserRepository extends UserRepository {
 
   update(user: User): Promise<void> {
     if (!isValidObjectId(user.id)) {
-      throw `User not found with UserId ${user.id}`;
+      throw new UserNotFoundException(user.id);
     }
     return new Promise(async (resolve) => {
       const updatedUser = this.userModel
@@ -73,16 +78,19 @@ export class MongoUserRepository extends UserRepository {
     return mapToEntity(found);
   }
 
-  delete(id: UserId): Promise<boolean> {
+  delete(id: UserId): Promise<void> {
     if (!isValidObjectId(id)) {
-      return Promise.resolve(undefined);
+      return Promise.reject(new UserNotFoundException(id));
     }
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       this.userModel
         .findByIdAndDelete(id)
         .exec()
         .then((result) => {
-          resolve(!!result);
+          if (!!result) {
+            reject(new UserNotFoundException(id));
+          }
+          resolve(void 0);
         });
     });
   }
