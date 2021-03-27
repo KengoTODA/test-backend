@@ -26,6 +26,11 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           flag-name: Unit
+      - uses: coverallsapp/github-action@v1.1.2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: E2E
+          path-to-lcov: ./coverage-e2e/lcov.info
       - uses: actions/upload-artifact@v2.2.2
         with:
           name: coverage
