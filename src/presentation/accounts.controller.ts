@@ -36,12 +36,7 @@ export class AccountController {
           scope: ['user'],
         },
         function (accessToken, refreshToken, profile, cb) {
-          user
-            .createOrGetFromGitHub(accessToken)
-            .then((created) => {
-              cb(null, created);
-            })
-            .catch(cb);
+          auth.logIn(accessToken, cb);
         },
       ),
     );
