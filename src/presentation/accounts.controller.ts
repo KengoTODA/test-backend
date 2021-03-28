@@ -8,11 +8,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import passport, { authenticate, use } from 'passport';
+import { authenticate, use } from 'passport';
 import { Strategy as GitHubStrategy } from 'passport-github';
 import { config } from 'dotenv';
 import * as express from 'express';
-import { ApiOperation, ApiResponse, ApiOAuth2, ApiTags } from '@nestjs/swagger';
+import { ApiOAuth2, ApiTags } from '@nestjs/swagger';
 import { AuthService } from '../application/auth.service';
 import { UserNotFoundExceptionFilter } from './user.filter';
 import { UserAppService } from '../application/user.service';

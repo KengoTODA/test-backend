@@ -40,7 +40,7 @@ export class OnMemoryUserRepository extends UserRepository {
   }
 
   findByName(name: string): Promise<User> {
-    for (var [name, user] of this.map.entries()) {
+    for (const user of this.map.values()) {
       if (user.name === name) {
         return Promise.resolve(user);
       }

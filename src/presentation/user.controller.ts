@@ -17,7 +17,7 @@ import { UserNotFoundExceptionFilter } from './user.filter';
 @Controller('/users')
 @UseFilters(new UserNotFoundExceptionFilter())
 export class UserController {
-  constructor(private readonly UserAppService: UserAppService) {}
+  constructor(private readonly userAppService: UserAppService) {}
 
   @Get()
   @ApiOperation({
@@ -29,7 +29,7 @@ export class UserController {
   })
   async listUser(): Promise<UserWithIdDto[]> {
     // TODO handle as stream
-    return Array.from(await this.UserAppService.listUser());
+    return Array.from(await this.userAppService.listUser());
   }
 
   @Get(':id')
@@ -43,7 +43,7 @@ export class UserController {
   })
   @ApiResponse({ status: 404, description: 'The record has not been found.' })
   async findUser(id: UserId): Promise<UserWithIdDto> {
-    return await this.UserAppService.getUser(id);
+    return await this.userAppService.getUser(id);
   }
 
   @Post()
@@ -56,7 +56,7 @@ export class UserController {
     description: 'The record has been successfully created.',
   })
   createUser(user: UserDto): Promise<UserWithIdDto> {
-    return this.UserAppService.createUser(user);
+    return this.userAppService.createUser(user);
   }
 
   @Put(':id')
@@ -71,7 +71,7 @@ export class UserController {
   @ApiResponse({ status: 404, description: 'The record has not been found.' })
   async updateUser(id: string, user: UserDto): Promise<UserWithIdDto> {
     const updated = { ...user, id };
-    await this.UserAppService.updateUser(updated);
+    await this.userAppService.updateUser(updated);
     return updated;
   }
 
@@ -86,6 +86,6 @@ export class UserController {
   })
   @ApiResponse({ status: 404, description: 'The record has not been found.' })
   async deleteUser(id: UserId) {
-    await this.UserAppService.deleteUser(id);
+    await this.userAppService.deleteUser(id);
   }
 }
