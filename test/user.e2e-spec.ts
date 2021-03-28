@@ -39,7 +39,7 @@ describe('UserController (e2e)', () => {
   });
 
   afterEach(() => {
-    app.close();
+    app?.close();
   });
 
   describe('/users (GET)', () => {

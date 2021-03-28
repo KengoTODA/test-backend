@@ -25,7 +25,7 @@ describe('Mongo infra tier', () => {
   });
 
   afterEach(() => {
-    app.close();
+    app?.close();
   });
 
   describe('create()', () => {
