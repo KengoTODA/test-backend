@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Octokit } from '@octokit/rest';
+import { RestEndpointMethodTypes } from '@octokit/plugin-rest-endpoint-methods';
 import { UserNotFoundException } from '../domain/user.exception';
 import { User } from '../domain/user.interface';
 import { UserAppService } from './user.service';
@@ -16,9 +17,10 @@ export class AuthService {
    */
   async logIn(accessToken: string, cb: (e: Error, u: User) => void) {
     const octokit = new Octokit({ auth: accessToken });
-    const githubUser = await octokit.users.getAuthenticated();
+    let githubUser: RestEndpointMethodTypes['users']['getAuthenticated']['response'];
 
     try {
+      githubUser = await octokit.users.getAuthenticated();
       const found = await this.user.getUserByName(githubUser.data.login);
       cb(null, found);
       return;

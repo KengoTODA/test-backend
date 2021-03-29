@@ -3,7 +3,8 @@ import * as nock from 'nock';
 import { UserRepository } from '../domain/user.repository';
 import { OnMemoryUserRepository } from '../infra/on-memory/user.repository';
 import { AuthService } from './auth.service';
-import { UserAppService } from './user.service';
+import { NewUser, User, UserAppService } from './user.service';
+import { promisify } from 'util';
 
 /**
  * Mocked response from api.github.com/user
@@ -44,6 +45,30 @@ const authenticated = {
   updated_at: '2008-01-14T04:33:35Z',
 };
 
+class FailingUserRepository implements UserRepository {
+  list(): Promise<IterableIterator<User>> {
+    return Promise.reject(new Error('Failed to operate'));
+  }
+  create(user: NewUser): Promise<User> {
+    return Promise.reject(new Error('Failed to operate'));
+  }
+  update(user: User): Promise<void> {
+    return Promise.reject(new Error('Failed to operate'));
+  }
+  find(id: string): Promise<User> {
+    return Promise.reject(new Error('Failed to operate'));
+  }
+  findByName(name: string): Promise<User> {
+    return Promise.reject(new Error('Failed to operate'));
+  }
+  delete(id: string): Promise<void> {
+    return Promise.reject(new Error('Failed to operate'));
+  }
+  deleteAll(): Promise<void> {
+    return Promise.reject(new Error('Failed to operate'));
+  }
+}
+
 describe('AuthService', () => {
   let service: AuthService;
 
@@ -69,14 +94,68 @@ describe('AuthService', () => {
       nock.cleanAll();
     });
 
-    it('creates a user', (done) => {
+    describe('for first sign-in', () => {
+      it('creates a user', async () => {
+        const scope = nock('https://api.github.com')
+          .get('/user')
+          .reply(200, authenticated);
+        const logIn = promisify(service.logIn).bind(service);
+        const user = await logIn('token');
+        expect(user).toHaveProperty('name', 'octocat');
+        scope.done();
+      });
+    });
+
+    it('returns an existing user', async () => {
       const scope = nock('https://api.github.com')
         .get('/user')
         .reply(200, authenticated);
-      service.logIn('token', (e, user) => {
-        expect(user).toHaveProperty('name', 'octocat');
-        scope.done();
-        done();
+      const logIn = promisify(service.logIn).bind(service);
+      const user = await logIn('token');
+      expect(user).toHaveProperty('name', 'octocat');
+      scope.done();
+    });
+
+    it('rejects in case of GitHub API error', async () => {
+      const scope = nock('https://api.github.com').get('/user').reply(500);
+      const logIn = promisify(service.logIn).bind(service);
+      return expect(logIn('token'))
+        .rejects.toThrow()
+        .then(() => {
+          scope.done();
+        });
+    }, 5000);
+  });
+});
+
+describe('AuthService with broken datastore', () => {
+  let service: AuthService;
+
+  beforeEach(async () => {
+    const userRepositoryProvider = {
+      provide: UserRepository,
+      useClass: FailingUserRepository,
+    };
+
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [userRepositoryProvider, AuthService, UserAppService],
+    }).compile();
+
+    service = module.get<AuthService>(AuthService);
+  });
+
+  describe('logIn', () => {
+    describe('for first sign-in', () => {
+      it('throws an error if failed to create a user', async () => {
+        const scope = nock('https://api.github.com')
+          .get('/user')
+          .reply(200, authenticated);
+        const logIn = promisify(service.logIn).bind(service);
+        expect(logIn('token'))
+          .rejects.toThrow()
+          .then(() => {
+            scope.done();
+          });
       });
     });
   });
