@@ -150,7 +150,6 @@ describe('AuthService', () => {
 
 describe('AuthService with broken datastore', () => {
   let service: AuthService;
-  let repo: UserRepository;
 
   beforeEach(async () => {
     const userRepositoryProvider = {
@@ -163,7 +162,6 @@ describe('AuthService with broken datastore', () => {
     }).compile();
 
     service = module.get<AuthService>(AuthService);
-    repo = module.get<UserRepository>(UserRepository);
   });
 
   afterEach(() => {
