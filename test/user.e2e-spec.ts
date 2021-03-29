@@ -154,4 +154,9 @@ describe('UserController (e2e)', () => {
         });
     });
   });
+
+  describe('/accounts (GET)', () => {
+    test.todo('redirects to GitHub to auth client by OAuth2');
+    test.todo('creates a user for first sign-in');
+  });
 });

@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { Octokit } from '@octokit/rest';
+import { UserNotFoundException } from '../domain/user.exception';
 import { User } from '../domain/user.interface';
 import { UserAppService } from './user.service';
 
@@ -12,14 +14,35 @@ export class AuthService {
    * @param accessToken GitHub access token
    * @param cb callback function to call when authentication finishes
    */
-  logIn(accessToken: string, cb: (e: Error, u: User) => void) {
-    this.user
-      .createOrGetFromGitHub(accessToken)
-      .then((created) => {
-        cb(null, created);
-      })
-      .catch((e) => {
+  async logIn(accessToken: string, cb: (e: Error, u: User) => void) {
+    const octokit = new Octokit({ auth: accessToken });
+    const githubUser = await octokit.users.getAuthenticated();
+
+    try {
+      const found = await this.user.getUserByName(githubUser.data.login);
+      cb(null, found);
+      return;
+    } catch (e) {
+      if (!(e instanceof UserNotFoundException)) {
         cb(e, null);
+        return;
+      }
+    }
+
+    // this is the first login (= sign up), create a user from GitHub profile
+    try {
+      const created = await this.user.createUser({
+        name: githubUser.data.login,
+        dob: null,
+        address: githubUser.data.location,
+        description: githubUser.data.bio,
+        createdAt: new Date(),
       });
+      cb(null, created);
+      return;
+    } catch (e) {
+      cb(e, null);
+      return;
+    }
   }
 }

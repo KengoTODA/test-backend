@@ -40,6 +40,22 @@ describe('OnMemory infra tier', () => {
     });
   });
 
+  describe('findByName()', () => {
+    it('throws an error if user does not exist', async () => {
+      expect(repo.findByName('unknown')).rejects.toThrow(UserNotFoundException);
+    });
+    it('gets a user', async () => {
+      const user = await repo.create({
+        name: 'KengoTODA',
+        createdAt: new Date(),
+        dob: null,
+        description: null,
+        address: null,
+      });
+      expect(repo.findByName('KengoTODA')).resolves.toStrictEqual(user);
+    });
+  });
+
   describe('update()', () => {
     it('throws an error if user not found', async () => {
       async function tryUpdate() {
