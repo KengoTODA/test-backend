@@ -3,7 +3,7 @@ import * as nock from 'nock';
 import { UserRepository } from '../domain/user.repository';
 import { OnMemoryUserRepository } from '../infra/on-memory/user.repository';
 import { AuthService } from './auth.service';
-import { NewUser, User, UserAppService } from './user.service';
+import { User, UserAppService } from './user.service';
 import { promisify } from 'util';
 
 /**
@@ -49,19 +49,19 @@ class FailingUserRepository implements UserRepository {
   list(): Promise<IterableIterator<User>> {
     return Promise.reject(new Error('Failed to operate'));
   }
-  create(user: NewUser): Promise<User> {
+  create(): Promise<User> {
     return Promise.reject(new Error('Failed to operate'));
   }
-  update(user: User): Promise<void> {
+  update(): Promise<void> {
     return Promise.reject(new Error('Failed to operate'));
   }
-  find(id: string): Promise<User> {
+  find(): Promise<User> {
     return Promise.reject(new Error('Failed to operate'));
   }
-  findByName(name: string): Promise<User> {
+  findByName(): Promise<User> {
     return Promise.reject(new Error('Failed to operate'));
   }
-  delete(id: string): Promise<void> {
+  delete(): Promise<void> {
     return Promise.reject(new Error('Failed to operate'));
   }
   deleteAll(): Promise<void> {
