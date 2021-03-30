@@ -1,5 +1,4 @@
 import { UserNotFoundException } from '../../domain/user.exception';
-import { NewUser, User, UserId } from '../../domain/user.interface';
 import { OnMemoryUserRepository } from './user.repository';
 
 describe('OnMemory infra tier', () => {

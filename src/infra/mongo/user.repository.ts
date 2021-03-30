@@ -49,7 +49,7 @@ export class MongoUserRepository extends UserRepository {
   async create(user: NewUser): Promise<User> {
     const createdUser = new this.userModel(user);
     const doc = await createdUser.save();
-    return Promise.resolve(mapToEntity(createdUser));
+    return Promise.resolve(mapToEntity(doc));
   }
 
   update(user: User): Promise<void> {
@@ -57,7 +57,7 @@ export class MongoUserRepository extends UserRepository {
       throw new UserNotFoundException(user.id);
     }
     return new Promise(async (resolve) => {
-      const updatedUser = this.userModel
+      this.userModel
         .updateOne({ _id: user.id }, mapToMongo(user))
         .exec()
         .then(() => {

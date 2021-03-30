@@ -21,7 +21,7 @@ const CONTEXT = 'UserController';
 @Controller('/users')
 @UseFilters(new UserNotFoundExceptionFilter())
 export class UserController {
-  constructor(private readonly UserAppService: UserAppService) {}
+  constructor(private readonly userAppService: UserAppService) {}
 
   @Get()
   @ApiOperation({
@@ -34,7 +34,7 @@ export class UserController {
   async listUser(): Promise<UserWithIdDto[]> {
     Logger.debug(`listUser...`, CONTEXT);
     // TODO handle as stream
-    const result = await this.UserAppService.listUser().then((iter) => {
+    const result = await this.userAppService.listUser().then((iter) => {
       return Array.from(iter);
     });
     Logger.debug(`listUser finished`, CONTEXT);
@@ -53,7 +53,7 @@ export class UserController {
   @ApiResponse({ status: 404, description: 'The record has not been found.' })
   async findUser(id: UserId): Promise<UserWithIdDto> {
     Logger.debug(`findUser with UserId ${id}...`, CONTEXT);
-    const result = await this.UserAppService.getUser(id);
+    const result = await this.userAppService.getUser(id);
     Logger.debug(`findUser finished with UserId ${id}`, CONTEXT);
     return result;
   }
@@ -69,7 +69,7 @@ export class UserController {
   })
   createUser(user: UserDto): Promise<UserWithIdDto> {
     Logger.debug(`createUser with ${user}...`, CONTEXT);
-    return this.UserAppService.createUser(user).then((created) => {
+    return this.userAppService.createUser(user).then((created) => {
       Logger.debug(`createUser finished with ${user}`, CONTEXT);
       return created;
     });
@@ -88,7 +88,7 @@ export class UserController {
   async updateUser(id: string, user: UserDto): Promise<UserWithIdDto> {
     const updated = { ...user, id };
     Logger.debug(`updateUser with user ${updated}...`, CONTEXT);
-    await this.UserAppService.updateUser(updated);
+    await this.userAppService.updateUser(updated);
     Logger.debug(`updateUser finished with user ${updated}`, CONTEXT);
     return updated;
   }
@@ -105,7 +105,7 @@ export class UserController {
   @ApiResponse({ status: 404, description: 'The record has not been found.' })
   async deleteUser(id: UserId) {
     Logger.debug(`deleteUser with UserId ${id}...`, CONTEXT);
-    await this.UserAppService.deleteUser(id);
+    await this.userAppService.deleteUser(id);
     Logger.debug(`deleteUser finished with UserId ${id}`, CONTEXT);
   }
 }
