@@ -7,6 +7,40 @@ describe('OnMemory infra tier', () => {
   beforeEach(() => {
     repo.deleteAll();
   });
+  describe('list()', () => {
+    const user = {
+      name: 'name',
+      dob: new Date(),
+      address: 'address',
+      description: 'description',
+      createdAt: new Date(),
+    };
+
+    beforeEach(() => {
+      repo.create({ ...user, id: 'a' });
+      repo.create({ ...user, id: 'b' });
+      repo.create({ ...user, id: 'c' });
+    });
+    it('list from beginning if `from` is null', () => {
+      expect(repo.list(null)).resolves.toStrictEqual([
+        { ...user, id: 'a' },
+        { ...user, id: 'b' },
+        { ...user, id: 'c' },
+      ]);
+    });
+    it('list from just after the given `from`', () => {
+      expect(repo.list('a')).resolves.toStrictEqual([
+        { ...user, id: 'b' },
+        { ...user, id: 'c' },
+      ]);
+    });
+    it('limits length of result', () => {
+      expect(repo.list(null, 2)).resolves.toStrictEqual([
+        { ...user, id: 'a' },
+        { ...user, id: 'b' },
+      ]);
+    });
+  });
 
   describe('create()', () => {
     it('throws an error if ID is already used', async () => {

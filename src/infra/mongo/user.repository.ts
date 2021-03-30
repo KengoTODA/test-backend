@@ -3,7 +3,7 @@ import { UserFoundError, UserNotFoundError } from '../../domain/user.error';
 import { UserRepository } from '../../domain/user.repository';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserInMongo, UserDocument } from './user.schema';
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { Logger } from '@nestjs/common';
 
 const CONTEXT = 'MongoUserRepository';
@@ -28,17 +28,30 @@ function mapToEntity(doc: UserDocument): User {
   };
 }
 
+const DEFAULT_LIST_SIZE = 20;
+const MAX_LIST_SIZE = 100;
+
 export class MongoUserRepository extends UserRepository {
   constructor(
     @InjectModel(UserInMongo.name) private userModel: Model<UserDocument>,
   ) {
     super();
   }
+  async list(from: UserId, limit = DEFAULT_LIST_SIZE): Promise<User[]> {
+    if (limit <= 0) {
+      limit = DEFAULT_LIST_SIZE;
+    }
+    limit = Math.min(MAX_LIST_SIZE, limit);
+    const query: FilterQuery<UserInMongo> = {};
+    if (from) {
+      query.id = { $gt: from };
+    }
 
-  async list(): Promise<User[]> {
-    const documents = await this.userModel.find()
-    .sort({id: 'asc'})
-    .exec();
+    const documents = await this.userModel
+      .find(query)
+      .sort({ id: 'asc' })
+      .limit(limit)
+      .exec();
     return documents.map(mapToEntity);
   }
 

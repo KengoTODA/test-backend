@@ -2,6 +2,9 @@ import { User, UserId } from '../../domain/user.interface';
 import { UserFoundError, UserNotFoundError } from '../../domain/user.error';
 import { UserRepository } from '../../domain/user.repository';
 
+const DEFAULT_LIST_SIZE = 20;
+const MAX_LIST_SIZE = 100;
+
 export class OnMemoryUserRepository extends UserRepository {
   private readonly map: Map<UserId, User>;
   constructor() {
@@ -9,14 +12,27 @@ export class OnMemoryUserRepository extends UserRepository {
     this.map = new Map<UserId, User>();
   }
 
-  private createRandomId(): string {
-    return 'a';
-  }
+  list(from: UserId, limit?: number): Promise<User[]> {
+    if (limit <= 0) {
+      limit = DEFAULT_LIST_SIZE;
+    }
+    limit = Math.min(MAX_LIST_SIZE, limit);
 
-  list(): Promise<User[]> {
     const list = Array.from(this.map.values());
     list.sort((a, b) => a.id.localeCompare(b.id));
-    return Promise.resolve(list);
+    let start = 0;
+    if (from) {
+      for (const user of list) {
+        if (from.localeCompare(user.id) < 0) {
+          break;
+        }
+        ++start;
+      }
+    }
+    if (start === list.length) {
+      return Promise.resolve([]);
+    }
+    return Promise.resolve(list.slice(start, limit));
   }
 
   create(user: User) {

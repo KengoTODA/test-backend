@@ -5,9 +5,11 @@ import { User, UserId } from './user.interface';
  */
 export abstract class UserRepository {
   /**
+   * @param from the {@link UserId} to start the list, exclusive (the user with the given UserId will not be in the list). Give null to load from the beginning.
+   * @param limit size of the list. Repository implementation may return more smaller list.
    * @returns a iterator of all users in datastore
    */
-  abstract list(): Promise<User[]>;
+  abstract list(from: UserId, limit?: number): Promise<User[]>;
 
   /**
    * Create a new {@link User} and save it into datastore.
