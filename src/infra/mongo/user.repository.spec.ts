@@ -38,26 +38,32 @@ describe('Mongo infra tier', () => {
       createdAt: new Date(),
     };
 
-    beforeEach(async () => {
+    it('list from beginning if `from` is null', async () => {
       await repo.create({ ...user, id: 'a' });
       await repo.create({ ...user, id: 'b' });
       await repo.create({ ...user, id: 'c' });
-    });
 
-    it('list from beginning if `from` is null', () => {
       expect(repo.list(null)).resolves.toStrictEqual([
         { ...user, id: 'a' },
         { ...user, id: 'b' },
         { ...user, id: 'c' },
       ]);
     });
-    it('list from just after the given `from`', () => {
+    it('list from just after the given `from`', async () => {
+      await repo.create({ ...user, id: 'a' });
+      await repo.create({ ...user, id: 'b' });
+      await repo.create({ ...user, id: 'c' });
+
       expect(repo.list('a')).resolves.toStrictEqual([
         { ...user, id: 'b' },
         { ...user, id: 'c' },
       ]);
     });
-    it('limit length of result', () => {
+    it('limit length of result', async () => {
+      await repo.create({ ...user, id: 'a' });
+      await repo.create({ ...user, id: 'b' });
+      await repo.create({ ...user, id: 'c' });
+
       expect(repo.list(null, 2)).resolves.toStrictEqual([
         { ...user, id: 'a' },
         { ...user, id: 'b' },
