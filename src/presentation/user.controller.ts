@@ -8,10 +8,11 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseFilters,
 } from '@nestjs/common';
 import { UserId, UserAppService } from '../application/user.service';
-import { UserDto, UserWithIdDto } from './user.dto';
+import { ListConditionDto, UserDto, UserWithIdDto } from './user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserNotFoundErrorFilter } from './user.filter';
 
@@ -31,9 +32,13 @@ export class UserController {
     status: 200,
     description: 'The record has been successfully listed.',
   })
-  async listUser(): Promise<UserWithIdDto[]> {
-    Logger.debug(`listUser...`, CONTEXT);
-    const result = await this.userAppService.listUser();
+  @Bind(Query())
+  async listUser(condition: ListConditionDto): Promise<UserWithIdDto[]> {
+    Logger.debug(`listUser with condition ${JSON.stringify(condition)}...`, CONTEXT);
+    const result = await this.userAppService.listUser(
+      condition.from,
+      Number.parseInt(condition.limit, 10) | 0,
+    );
     Logger.debug(`listUser finished`, CONTEXT);
     return result;
   }

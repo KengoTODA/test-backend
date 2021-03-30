@@ -7,8 +7,8 @@ import { v4 as uuidv4 } from 'uuid';
 export class UserAppService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async listUser(): Promise<User[]> {
-    return this.userRepository.list();
+  async listUser(from: UserId, limit: number): Promise<User[]> {
+    return this.userRepository.list(from, limit);
   }
 
   /**
