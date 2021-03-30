@@ -68,7 +68,7 @@ export class MongoUserRepository extends UserRepository {
       .exec();
     if (result.n !== 1) {
       Logger.debug(
-        `Mongo updated no user, probably we have no User with the given UserId: ${user.id}. n is ${result.n}`,
+        `Mongo updated no user, probably we have no User with the given UserId: ${user.id}. Value of n returned from Mongo is ${result.n}`,
         CONTEXT,
       );
       throw new UserNotFoundException(user.id);
