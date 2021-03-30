@@ -1,4 +1,4 @@
-import { UserFoundException, UserNotFoundException } from '../../domain/user.exception';
+import { UserFoundError, UserNotFoundError } from '../../domain/user.error';
 import { UserRepository } from '../../domain/user.repository';
 import { MongoUserModule } from './user.module';
 import { INestApplication } from '@nestjs/common';
@@ -39,7 +39,7 @@ describe('Mongo infra tier', () => {
         createdAt: new Date(),
       };
       await repo.create(user);
-      expect(repo.create(user)).rejects.toThrow(UserFoundException);
+      expect(repo.create(user)).rejects.toThrow(UserFoundError);
     });
     it('creates a User', async () => {
       const user = {
@@ -57,10 +57,10 @@ describe('Mongo infra tier', () => {
 
   describe('load()', () => {
     it('throws an error if UserId is invalid', async () => {
-      expect(repo.load('')).rejects.toThrow(UserNotFoundException);
+      expect(repo.load('')).rejects.toThrow(UserNotFoundError);
     });
     it('throws an error if user not found', async () => {
-      expect(repo.load('id')).rejects.toThrow(UserNotFoundException);
+      expect(repo.load('id')).rejects.toThrow(UserNotFoundError);
     });
   });
 
@@ -75,7 +75,7 @@ describe('Mongo infra tier', () => {
           description: 'description',
           createdAt: new Date(),
         }),
-      ).rejects.toThrow(UserNotFoundException);
+      ).rejects.toThrow(UserNotFoundError);
     });
     it('throws an error if user not found', async () => {
       expect(
@@ -87,7 +87,7 @@ describe('Mongo infra tier', () => {
           description: 'description',
           createdAt: new Date(),
         }),
-      ).rejects.toThrow(UserNotFoundException);
+      ).rejects.toThrow(UserNotFoundError);
     });
     it('updates property', async () => {
       const user = {
@@ -109,10 +109,10 @@ describe('Mongo infra tier', () => {
 
   describe('delete()', () => {
     it('throws an error if UserId is invalid', async () => {
-      expect(repo.delete('')).rejects.toThrow(UserNotFoundException);
+      expect(repo.delete('')).rejects.toThrow(UserNotFoundError);
     });
     it('throws an error if user not found', async () => {
-      expect(repo.delete('id')).rejects.toThrow(UserNotFoundException);
+      expect(repo.delete('id')).rejects.toThrow(UserNotFoundError);
     });
     it('delete a user', async () => {
       const user = {
@@ -125,7 +125,7 @@ describe('Mongo infra tier', () => {
       };
       await repo.create(user);
       await repo.delete(user.id);
-      expect(repo.load(user.id)).rejects.toThrow(UserNotFoundException);
+      expect(repo.load(user.id)).rejects.toThrow(UserNotFoundError);
     });
   });
 });

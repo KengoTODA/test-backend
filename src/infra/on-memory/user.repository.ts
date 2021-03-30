@@ -1,8 +1,5 @@
 import { User, UserId } from '../../domain/user.interface';
-import {
-  UserFoundException,
-  UserNotFoundException,
-} from '../../domain/user.exception';
+import { UserFoundError, UserNotFoundError } from '../../domain/user.error';
 import { UserRepository } from '../../domain/user.repository';
 
 export class OnMemoryUserRepository extends UserRepository {
@@ -22,7 +19,7 @@ export class OnMemoryUserRepository extends UserRepository {
 
   create(user: User) {
     if (this.map.has(user.id)) {
-      throw new UserFoundException(user.id);
+      return Promise.reject(new UserFoundError(user.id));
     }
     this.map.set(user.id, user);
     return Promise.resolve(void 0);
@@ -30,7 +27,7 @@ export class OnMemoryUserRepository extends UserRepository {
 
   update(user: User) {
     if (!this.map.has(user.id)) {
-      return Promise.reject(new UserNotFoundException(user.id));
+      return Promise.reject(new UserNotFoundError(user.id));
     }
     this.map.set(user.id, user);
     return Promise.resolve(void 0);
@@ -38,14 +35,14 @@ export class OnMemoryUserRepository extends UserRepository {
 
   load(id: UserId): Promise<User | undefined> {
     if (!this.map.has(id)) {
-      return Promise.reject(new UserNotFoundException(id));
+      return Promise.reject(new UserNotFoundError(id));
     }
     return Promise.resolve(this.map.get(id));
   }
 
   delete(id: UserId): Promise<void> {
     if (!this.map.has(id)) {
-      return Promise.reject(new UserNotFoundException(id));
+      return Promise.reject(new UserNotFoundError(id));
     }
     this.map.delete(id);
     return Promise.resolve(void 0);

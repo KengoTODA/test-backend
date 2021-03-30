@@ -40,4 +40,4 @@ export class UserAppService {
 }
 
 export { User, NewUser, UserId } from '../domain/user.interface';
-export { UserNotFoundException } from '../domain/user.exception';
+export { UserNotFoundError } from '../domain/user.error';

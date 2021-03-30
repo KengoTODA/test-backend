@@ -1,8 +1,5 @@
 import { User, UserId } from '../../domain/user.interface';
-import {
-  UserFoundException,
-  UserNotFoundException,
-} from '../../domain/user.exception';
+import { UserFoundError, UserNotFoundError } from '../../domain/user.error';
 import { UserRepository } from '../../domain/user.repository';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserInMongo, UserDocument } from './user.schema';
@@ -46,7 +43,7 @@ export class MongoUserRepository extends UserRepository {
   async create(user: User): Promise<void> {
     const found = await this.userModel.findOne({ id: user.id }).exec();
     if (found) {
-      throw new UserFoundException(user.id);
+      throw new UserFoundError(user.id);
     }
     const createdUser = new this.userModel(user);
     await createdUser.save();
@@ -58,7 +55,7 @@ export class MongoUserRepository extends UserRepository {
         `Given UserId is unexpectedly formatted as UserId: ${user.id}`,
         CONTEXT,
       );
-      throw new UserNotFoundException(user.id);
+      throw new UserNotFoundError(user.id);
     }
     const result = await this.userModel.updateOne({ id: user.id }, user).exec();
     if (result.n !== 1) {
@@ -66,7 +63,7 @@ export class MongoUserRepository extends UserRepository {
         `Mongo updated no user, probably we have no User with the given UserId: ${user.id}. Value of n returned from Mongo is ${result.n}`,
         CONTEXT,
       );
-      throw new UserNotFoundException(user.id);
+      throw new UserNotFoundError(user.id);
     }
   }
 
@@ -76,13 +73,13 @@ export class MongoUserRepository extends UserRepository {
         `Given UserId is unexpectedly formatted as UserId: ${id}`,
         CONTEXT,
       );
-      throw new UserNotFoundException(id);
+      throw new UserNotFoundError(id);
     }
     const found = await this.userModel.findOne({ id }).exec();
     if (found) {
       return mapToEntity(found);
     } else {
-      throw new UserNotFoundException(id);
+      throw new UserNotFoundError(id);
     }
   }
 
@@ -92,7 +89,7 @@ export class MongoUserRepository extends UserRepository {
         `Given UserId is unexpectedly formatted as UserId: ${id}`,
         CONTEXT,
       );
-      throw new UserNotFoundException(id);
+      throw new UserNotFoundError(id);
     }
     const result = await this.userModel.deleteOne({ id }).exec();
 
@@ -101,7 +98,7 @@ export class MongoUserRepository extends UserRepository {
         `Mongo deleted no user, probably we have no User with the given UserId: ${id}`,
         CONTEXT,
       );
-      throw new UserNotFoundException(id);
+      throw new UserNotFoundError(id);
     }
   }
 

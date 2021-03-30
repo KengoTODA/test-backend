@@ -13,13 +13,13 @@ import {
 import { UserId, UserAppService } from '../application/user.service';
 import { UserDto, UserWithIdDto } from './user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { UserNotFoundExceptionFilter } from './user.filter';
+import { UserNotFoundErrorFilter } from './user.filter';
 
 const CONTEXT = 'UserController';
 
 @ApiTags('users')
 @Controller('/users')
-@UseFilters(new UserNotFoundExceptionFilter())
+@UseFilters(new UserNotFoundErrorFilter())
 export class UserController {
   constructor(private readonly userAppService: UserAppService) {}
 

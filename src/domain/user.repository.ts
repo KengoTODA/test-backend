@@ -20,7 +20,7 @@ export abstract class UserRepository {
    * Update a specified user in datastore.
    *
    * @param user the user to persist
-   * @throws {@link UserNotFoundException}
+   * @throws {@link UserNotFoundError}
    * Thrown if specified user does not exist in datastore
    */
   abstract update(user: User): Promise<void>;
@@ -29,7 +29,7 @@ export abstract class UserRepository {
    * Load a user specified by the given {@link UserId}.
    *
    * @param id the {@link UserId} to specify the target user
-   * @throws {@link UserNotFoundException}
+   * @throws {@link UserNotFoundError}
    * Thrown if specified user does not exist in datastore
    */
   abstract load(id: UserId): Promise<User | undefined>;
@@ -38,7 +38,7 @@ export abstract class UserRepository {
    * Delete a user specified by the given {@link UserId}.
    *
    * @param id the {@link UserId} to specify the target user
-   * @throws {@link UserNotFoundException}
+   * @throws {@link UserNotFoundError}
    * Thrown if specified user does not exist in datastore
    */
   abstract delete(id: UserId): Promise<void>;

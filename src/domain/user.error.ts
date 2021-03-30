@@ -1,9 +1,9 @@
-export class UserNotFoundException extends Error {
+export class UserNotFoundError extends Error {
   constructor(id: string) {
     super(`No user found with user ID ${id}`);
   }
 }
-export class UserFoundException extends Error {
+export class UserFoundError extends Error {
   constructor(id: string) {
     super(`User found with user ID ${id}`);
   }
