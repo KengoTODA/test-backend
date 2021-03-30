@@ -39,7 +39,7 @@ describe('UserController (e2e)', () => {
   });
 
   afterEach(() => {
-    app.close();
+    app?.close();
   });
 
   describe('/users (GET)', () => {
@@ -153,5 +153,10 @@ describe('UserController (e2e)', () => {
             .end(done);
         });
     });
+  });
+
+  describe('/accounts (GET)', () => {
+    test.todo('redirects to GitHub to auth client by OAuth2');
+    test.todo('creates a user for first sign-in');
   });
 });

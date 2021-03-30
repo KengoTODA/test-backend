@@ -15,7 +15,17 @@ export class UserAppService {
    * @returns the user data found by the given UserId
    */
   async getUser(id: UserId): Promise<User> {
-    return this.userRepository.load(id);
+    return this.userRepository.find(id);
+  }
+
+  /**
+   * @param name name (= GitHub login name) of the target user
+   * @returns the user data found by the given name
+   * @throws {@link UserNotFoundException}
+   * Thrown if specified user does not exist
+   */
+  async getUserByName(name: string): Promise<User> {
+    return this.userRepository.findByName(name);
   }
 
   async createUser(newUser: NewUser): Promise<User> {

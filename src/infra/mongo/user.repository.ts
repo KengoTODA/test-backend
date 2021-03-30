@@ -49,24 +49,25 @@ export class MongoUserRepository extends UserRepository {
   async create(user: NewUser): Promise<User> {
     const createdUser = new this.userModel(user);
     const doc = await createdUser.save();
-    return Promise.resolve(mapToEntity(createdUser));
+    return Promise.resolve(mapToEntity(doc));
   }
 
   update(user: User): Promise<void> {
     if (!isValidObjectId(user.id)) {
       throw new UserNotFoundException(user.id);
     }
-    return new Promise(async (resolve) => {
-      const updatedUser = this.userModel
+    return new Promise(async (resolve, reject) => {
+      this.userModel
         .updateOne({ _id: user.id }, mapToMongo(user))
         .exec()
         .then(() => {
           resolve(void 0);
-        });
+        })
+        .catch(reject);
     });
   }
 
-  async load(id: UserId): Promise<User | undefined> {
+  async find(id: UserId): Promise<User> {
     if (!isValidObjectId(id)) {
       return Promise.reject(new UserNotFoundException(id));
     }
@@ -75,6 +76,15 @@ export class MongoUserRepository extends UserRepository {
       return mapToEntity(found);
     } else {
       return Promise.reject(new UserNotFoundException(id));
+    }
+  }
+
+  async findByName(name: string): Promise<User> {
+    const found = await this.userModel.findOne({ name }).exec();
+    if (found) {
+      return mapToEntity(found);
+    } else {
+      return Promise.reject(new UserNotFoundException());
     }
   }
 

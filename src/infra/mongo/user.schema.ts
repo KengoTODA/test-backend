@@ -3,7 +3,9 @@ import { Document } from 'mongoose';
 
 @Schema()
 export class UserInMongo {
-  @Prop()
+  @Prop({
+    unique: true,
+  })
   name: string;
   @Prop()
   dob: Date;

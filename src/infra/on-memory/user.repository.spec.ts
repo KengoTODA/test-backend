@@ -1,5 +1,4 @@
 import { UserNotFoundException } from '../../domain/user.exception';
-import { NewUser, User, UserId } from '../../domain/user.interface';
 import { OnMemoryUserRepository } from './user.repository';
 
 describe('OnMemory infra tier', () => {
@@ -18,7 +17,7 @@ describe('OnMemory infra tier', () => {
         description: 'description',
         createdAt: new Date(),
       });
-      expect(await repo.load(created.id)).toBeDefined();
+      expect(await repo.find(created.id)).toBeDefined();
     });
     it('generates ID automatic', async () => {
       const created = await repo.create({
@@ -32,12 +31,28 @@ describe('OnMemory infra tier', () => {
     });
   });
 
-  describe('load()', () => {
+  describe('find()', () => {
     it('throws an error if UserId is invalid', async () => {
-      expect(repo.load('unknown')).rejects.toThrow(UserNotFoundException);
+      expect(repo.find('unknown')).rejects.toThrow(UserNotFoundException);
     });
     it('throws an error if user not found', async () => {
-      expect(repo.load('12characters')).rejects.toThrow(UserNotFoundException);
+      expect(repo.find('12characters')).rejects.toThrow(UserNotFoundException);
+    });
+  });
+
+  describe('findByName()', () => {
+    it('throws an error if user does not exist', async () => {
+      expect(repo.findByName('unknown')).rejects.toThrow(UserNotFoundException);
+    });
+    it('gets a user', async () => {
+      const user = await repo.create({
+        name: 'KengoTODA',
+        createdAt: new Date(),
+        dob: null,
+        description: null,
+        address: null,
+      });
+      expect(repo.findByName('KengoTODA')).resolves.toStrictEqual(user);
     });
   });
 
@@ -69,7 +84,7 @@ describe('OnMemory infra tier', () => {
         ...created,
         name: 'new name',
       });
-      expect(repo.load(created.id)).resolves.toHaveProperty('name', 'new name');
+      expect(repo.find(created.id)).resolves.toHaveProperty('name', 'new name');
     });
   });
 
@@ -91,7 +106,7 @@ describe('OnMemory infra tier', () => {
         createdAt: new Date(),
       });
       await repo.delete(created.id);
-      expect(repo.load(created.id)).rejects.toThrow(UserNotFoundException);
+      expect(repo.find(created.id)).rejects.toThrow(UserNotFoundException);
     });
   });
 });

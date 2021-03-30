@@ -27,13 +27,22 @@ export abstract class UserRepository {
   abstract update(user: User): Promise<void>;
 
   /**
-   * Load a user specified by the given {@link UserId}.
+   * Find a user specified by the given {@link UserId}.
    *
    * @param id the {@link UserId} to specify the target user
    * @throws {@link UserNotFoundException}
    * Thrown if specified user does not exist in datastore
    */
-  abstract load(id: UserId): Promise<User | undefined>;
+  abstract find(id: UserId): Promise<User>;
+
+  /**
+   * Find a user specified by the given user name.
+   *
+   * @param name the user name to specify the target user
+   * @throws {@link UserNotFoundException}
+   * Thrown if specified user does not exist in datastore
+   */
+  abstract findByName(name: string): Promise<User>;
 
   /**
    * Delete a user specified by the given {@link UserId}.

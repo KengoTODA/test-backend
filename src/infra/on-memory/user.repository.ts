@@ -32,11 +32,20 @@ export class OnMemoryUserRepository extends UserRepository {
     return Promise.resolve(void 0);
   }
 
-  load(id: UserId): Promise<User | undefined> {
+  find(id: UserId): Promise<User> {
     if (!this.map.has(id)) {
       return Promise.reject(new UserNotFoundException(id));
     }
     return Promise.resolve(this.map.get(id));
+  }
+
+  findByName(name: string): Promise<User> {
+    for (const user of this.map.values()) {
+      if (user.name === name) {
+        return Promise.resolve(user);
+      }
+    }
+    return Promise.reject(new UserNotFoundException());
   }
 
   delete(id: UserId): Promise<void> {
