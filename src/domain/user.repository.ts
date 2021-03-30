@@ -1,4 +1,4 @@
-import { NewUser, User, UserId } from './user.interface';
+import { User, UserId } from './user.interface';
 
 /**
  * Persists {@link User} instances to datastore.
@@ -13,9 +13,8 @@ export abstract class UserRepository {
    * Create a new {@link User} and save it into datastore.
    *
    * @param user prameters for the newly created user
-   * @returns the newly created user
    */
-  abstract create(user: NewUser): Promise<User>;
+  abstract create(user: User): Promise<void>;
 
   /**
    * Update a specified user in datastore.

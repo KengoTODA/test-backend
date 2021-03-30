@@ -1,5 +1,8 @@
-import { NewUser, User, UserId } from '../../domain/user.interface';
-import { UserNotFoundException } from '../../domain/user.exception';
+import { User, UserId } from '../../domain/user.interface';
+import {
+  UserFoundException,
+  UserNotFoundException,
+} from '../../domain/user.exception';
 import { UserRepository } from '../../domain/user.repository';
 
 export class OnMemoryUserRepository extends UserRepository {
@@ -17,11 +20,12 @@ export class OnMemoryUserRepository extends UserRepository {
     return Promise.resolve(this.map.values());
   }
 
-  create(user: NewUser) {
-    const id = this.createRandomId();
-    const createdUser = { id, ...user };
-    this.map.set(id, createdUser);
-    return Promise.resolve(createdUser);
+  create(user: User) {
+    if (this.map.has(user.id)) {
+      throw new UserFoundException(user.id);
+    }
+    this.map.set(user.id, user);
+    return Promise.resolve(void 0);
   }
 
   update(user: User) {

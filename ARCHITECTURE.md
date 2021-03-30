@@ -59,8 +59,6 @@ This tier represents the domain of target business. In this layer, we put the fo
 
 This tier represents the infrastructure implementation of repository. In this layer, we put the Repository implementation.
 
-This tier is responsible to decide the ID of entities, because requirements for ID depends on the database system: one uses `UUID` and another uses `BLOB`. In case of Mongo it uses [ObjectId](https://docs.mongodb.com/manual/reference/bson-types/#objectid) that can be represented as a string with 12 characters.
-
 Ideally, this tier can be replaced with similar implementation that supports another datastore, without updating other tiers.
 
 ### Application
