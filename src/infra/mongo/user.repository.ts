@@ -66,9 +66,9 @@ export class MongoUserRepository extends UserRepository {
     const result = await this.userModel
       .updateOne({ _id: user.id }, mapToMongo(user))
       .exec();
-    if (result.nModified !== 1) {
+    if (result.n !== 1) {
       Logger.debug(
-        `Mongo updated no user, probably we have no User with the given UserId: ${user.id}`,
+        `Mongo updated no user, probably we have no User with the given UserId: ${user.id}. n is ${result.n}`,
         CONTEXT,
       );
       throw new UserNotFoundException(user.id);
