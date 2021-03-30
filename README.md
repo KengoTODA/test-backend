@@ -11,6 +11,7 @@ It is also necessary to configure `GITHUB_REDIRECT_URL` if your server is not ru
 GITHUB_CLIENT_ID=...
 GITHUB_CLIENT_SECRET=...
 GITHUB_REDIRECT_URL=https://example.com:3000/accounts/login/callback
+SESSION_SECRET=
 ```
 
 ### Run MongoDB in container

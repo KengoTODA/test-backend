@@ -2,9 +2,13 @@ import { NestFactory } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as passport from 'passport';
+import * as express from 'express';
+import * as session from 'express-session';
+import * as csurf from 'csurf';
 import { AppModule } from './app.module';
 import { existsSync, readFileSync } from 'fs';
 import * as helmet from 'helmet';
+import { HttpError } from 'http-errors';
 
 const CERT_FILE = 'localhost.pem';
 const KEY_FILE = 'localhost-key.pem';
@@ -50,6 +54,33 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, document);
 
   app.useGlobalPipes(new ValidationPipe());
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        httpOnly: true,
+        secure: httpsOptions.hasOwnProperty('key'),
+      },
+    }),
+  );
+  app.use((req: express.Request, res: express.Response, next: any) => {
+    try {
+      next();
+    } catch (e) {
+      console.log(typeof e, e);
+      if (e instanceof HttpError) {
+        res.status(e.status).send({
+          statusCode: e.status,
+          message: e.message,
+        });
+      } else {
+        next(e);
+      }
+    }
+  });
+  app.use(csurf());
   app.use(passport.initialize());
   app.use(passport.session());
 

@@ -57,8 +57,24 @@ export class AccountController {
 
   @Get('login/callback')
   @Bind(Request())
-  callback(req: express.Request) {
+  callback(req: express.Request): Promise<Express.User> {
     authenticate('github');
-    return req.user;
+    return new Promise((resolve, reject) => {
+      // regenerate session to avoid the session-fixation attack
+      req.session.regenerate((err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(req.user);
+        }
+      });
+    });
+  }
+
+  @UseGuards(AuthGuard('github'))
+  @Get('csrfToken')
+  @Bind(Request())
+  getToken(req: express.Request) {
+    return req.csrfToken;
   }
 }
