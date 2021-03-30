@@ -8,10 +8,8 @@
 import { UserId } from 'src/domain/user.interface';
 import {
   IsNotEmpty,
-  IsNumber,
   IsNumberString,
   IsOptional,
-  IsPositive,
   IsString,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
