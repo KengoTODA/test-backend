@@ -10,7 +10,7 @@ const CERT_FILE = 'localhost.pem';
 const KEY_FILE = 'localhost-key.pem';
 
 function createApp(): Promise<INestApplication> {
-  let httpsOptions: HttpsOptions = {};
+  let httpsOptions: HttpsOptions = undefined;
   if (existsSync(`./${KEY_FILE}`) && existsSync(`./${CERT_FILE}`)) {
     Logger.log('Certificate found, use HTTPS to serve app', CONTEXT);
     httpsOptions = {
