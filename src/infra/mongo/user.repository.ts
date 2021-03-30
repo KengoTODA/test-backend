@@ -4,6 +4,7 @@ import { UserRepository } from '../../domain/user.repository';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserInMongo, UserDocument } from './user.schema';
 import { Model, isValidObjectId } from 'mongoose';
+import { Logger } from '@nestjs/common';
 
 /**
  * Remove Mongo related properties from the Document class.
@@ -34,6 +35,8 @@ function mapToMongo(entity: User): UserInMongo {
   };
 }
 
+const CONTEXT = 'MongoUserRepository';
+
 export class MongoUserRepository extends UserRepository {
   constructor(
     @InjectModel(UserInMongo.name) private userModel: Model<UserDocument>,
@@ -49,56 +52,65 @@ export class MongoUserRepository extends UserRepository {
   async create(user: NewUser): Promise<User> {
     const createdUser = new this.userModel(user);
     const doc = await createdUser.save();
-    return Promise.resolve(mapToEntity(doc));
+    return mapToEntity(doc);
   }
 
-  update(user: User): Promise<void> {
+  async update(user: User): Promise<void> {
     if (!isValidObjectId(user.id)) {
+      Logger.debug(
+        `Given UserId is unexpectedly formatted as UserId: ${user.id}`,
+        CONTEXT,
+      );
       throw new UserNotFoundException(user.id);
     }
-    return new Promise(async (resolve) => {
-      this.userModel
-        .updateOne({ _id: user.id }, mapToMongo(user))
-        .exec()
-        .then(() => {
-          resolve(void 0);
-        });
-    });
+    const result = await this.userModel
+      .updateOne({ _id: user.id }, mapToMongo(user))
+      .exec();
+    if (result.nModified !== 1) {
+      Logger.debug(
+        `Mongo updated no user, probably we have no User with the given UserId: ${user.id}`,
+        CONTEXT,
+      );
+      throw new UserNotFoundException(user.id);
+    }
   }
 
   async load(id: UserId): Promise<User | undefined> {
     if (!isValidObjectId(id)) {
-      return Promise.reject(new UserNotFoundException(id));
+      Logger.debug(
+        `Given UserId is unexpectedly formatted as UserId: ${id}`,
+        CONTEXT,
+      );
+      throw new UserNotFoundException(id);
     }
     const found = await this.userModel.findById(id).exec();
     if (found) {
       return mapToEntity(found);
     } else {
-      return Promise.reject(new UserNotFoundException(id));
+      throw new UserNotFoundException(id);
     }
   }
 
-  delete(id: UserId): Promise<void> {
+  async delete(id: UserId): Promise<void> {
     if (!isValidObjectId(id)) {
-      return Promise.reject(new UserNotFoundException(id));
+      Logger.debug(
+        `Given UserId is unexpectedly formatted as UserId: ${id}`,
+        CONTEXT,
+      );
+      throw new UserNotFoundException(id);
     }
-    return new Promise((resolve, reject) => {
-      this.userModel
-        .deleteOne({ _id: id })
-        .exec()
-        .then((result) => {
-          if (result.ok && result.deletedCount !== 1) {
-            reject(new UserNotFoundException(id));
-          }
-          resolve(void 0);
-        });
-    });
+    const result = await this.userModel.deleteOne({ _id: id }).exec();
+
+    if (result.deletedCount !== 1) {
+      Logger.debug(
+        `Mongo deleted no user, probably we have no User with the given UserId: ${id}`,
+        CONTEXT,
+      );
+      throw new UserNotFoundException(id);
+    }
   }
 
-  deleteAll(): Promise<void> {
-    return new Promise(async (resolve) => {
-      await this.userModel.deleteMany({}).exec();
-      resolve(void 0);
-    });
+  async deleteAll(): Promise<void> {
+    await this.userModel.deleteMany({}).exec();
   }
 }
