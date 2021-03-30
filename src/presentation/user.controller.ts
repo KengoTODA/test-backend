@@ -34,7 +34,10 @@ export class UserController {
   })
   @Bind(Query())
   async listUser(condition: ListConditionDto): Promise<UserWithIdDto[]> {
-    Logger.debug(`listUser with condition ${JSON.stringify(condition)}...`, CONTEXT);
+    Logger.debug(
+      `listUser with condition ${JSON.stringify(condition)}...`,
+      CONTEXT,
+    );
     const result = await this.userAppService.listUser(
       condition.from,
       Number.parseInt(condition.limit, 10) | 0,
