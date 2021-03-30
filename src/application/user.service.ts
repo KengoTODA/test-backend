@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 export class UserAppService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async listUser(): Promise<IterableIterator<User>> {
+  async listUser(): Promise<User[]> {
     return this.userRepository.list();
   }
 

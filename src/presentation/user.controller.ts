@@ -33,10 +33,7 @@ export class UserController {
   })
   async listUser(): Promise<UserWithIdDto[]> {
     Logger.debug(`listUser...`, CONTEXT);
-    // TODO handle as stream
-    const result = await this.userAppService.listUser().then((iter) => {
-      return Array.from(iter);
-    });
+    const result = await this.userAppService.listUser();
     Logger.debug(`listUser finished`, CONTEXT);
     return result;
   }

@@ -35,9 +35,11 @@ export class MongoUserRepository extends UserRepository {
     super();
   }
 
-  async list(): Promise<IterableIterator<User>> {
-    const documents = await this.userModel.find().exec();
-    return documents.map(mapToEntity).values();
+  async list(): Promise<User[]> {
+    const documents = await this.userModel.find()
+    .sort({id: 'asc'})
+    .exec();
+    return documents.map(mapToEntity);
   }
 
   async create(user: User): Promise<void> {

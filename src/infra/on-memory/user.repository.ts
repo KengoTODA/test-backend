@@ -13,8 +13,10 @@ export class OnMemoryUserRepository extends UserRepository {
     return 'a';
   }
 
-  list(): Promise<IterableIterator<User>> {
-    return Promise.resolve(this.map.values());
+  list(): Promise<User[]> {
+    const list = Array.from(this.map.values());
+    list.sort((a, b) => a.id.localeCompare(b.id));
+    return Promise.resolve(list);
   }
 
   create(user: User) {

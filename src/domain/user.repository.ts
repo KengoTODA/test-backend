@@ -7,7 +7,7 @@ export abstract class UserRepository {
   /**
    * @returns a iterator of all users in datastore
    */
-  abstract list(): Promise<IterableIterator<User>>;
+  abstract list(): Promise<User[]>;
 
   /**
    * Create a new {@link User} and save it into datastore.
