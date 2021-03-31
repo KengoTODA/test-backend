@@ -17,7 +17,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json --coverage"
+    "test:e2e": "jest --config ./test/jest-e2e.json --coverage",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@nestjs/common": "^7.6.15",
@@ -80,10 +81,5 @@
       ".module.ts$",
       ".e2e-spec.ts$"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged"
-    }
   }
 }
