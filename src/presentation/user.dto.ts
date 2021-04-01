@@ -11,6 +11,7 @@ import {
   IsNumberString,
   IsOptional,
   IsString,
+  Length,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -21,6 +22,7 @@ export class UserDto {
   })
   @IsNotEmpty()
   @IsString()
+  @Length(1, 50)
   name: string;
 
   @ApiProperty({
@@ -35,6 +37,7 @@ export class UserDto {
     example: '上海市静安区',
   })
   @IsString()
+  @Length(0, 30)
   address: string;
 
   @ApiProperty({
@@ -42,6 +45,7 @@ export class UserDto {
     example: 'Cat lover from 7 years old :)',
   })
   @IsString()
+  @Length(0, 160)
   description: string;
 
   @ApiProperty({
@@ -58,6 +62,7 @@ export class UserWithIdDto extends UserDto {
   })
   @IsNotEmpty()
   @IsString()
+  @Length(1, 36)
   id: UserId;
 }
 
@@ -70,6 +75,7 @@ export class ListConditionDto {
   @IsNotEmpty()
   @IsString()
   @IsOptional()
+  @Length(1, 36)
   from?: UserId;
 
   @ApiProperty({
@@ -78,5 +84,6 @@ export class ListConditionDto {
   })
   @IsNumberString()
   @IsOptional()
+  @Length(1, 100)
   limit?: string;
 }
