@@ -7,6 +7,7 @@
 
 import { UserId } from 'src/domain/user.interface';
 import {
+  IsDateString,
   IsNotEmpty,
   IsNumberString,
   IsOptional,
@@ -17,7 +18,8 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class UserDto {
   @ApiProperty({
-    description: 'Name of User',
+    description:
+      'The non-empty user name displayed in the system, as known as display-name. Its length should be less than 50 characters (same to Twitter).',
     example: 'John Smith',
   })
   @IsNotEmpty()
@@ -26,33 +28,40 @@ export class UserDto {
   name: string;
 
   @ApiProperty({
-    description: 'Date of birth',
+    description: "The user's date of birth. Could be null.",
     example: '2001-03-19T08:32:13.404Z',
   })
-  @IsString()
+  @IsDateString()
+  @IsOptional()
   dob: Date;
 
   @ApiProperty({
-    description: 'Address of user',
+    description: "The user's address. Could be null or empty.",
     example: '上海市静安区',
   })
   @IsString()
+  @IsOptional()
   @Length(0, 30)
   address: string;
 
   @ApiProperty({
-    description: 'Self-description from user',
+    description: "The user's self-description. Could be null or empty.",
     example: 'Cat lover from 7 years old :)',
   })
   @IsString()
+  @IsOptional()
   @Length(0, 160)
   description: string;
 
+  /**
+   * Assume that API is not disclosed to end-users.
+   * So `createdAt` param is also update-able by design.
+   */
   @ApiProperty({
     description: 'The date to join the service',
     example: '2021-03-19T08:32:13.404Z',
   })
-  @IsString()
+  @IsDateString()
   createdAt: Date;
 }
 
